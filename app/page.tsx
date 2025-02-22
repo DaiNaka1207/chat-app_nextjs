@@ -1,5 +1,40 @@
 export default function Home() {
   const appName = process.env.APP_NAME;
+
+  // MessageData
+  const ITEMS = [
+    {
+      id: "1",
+      date: "2025-2-21 23:30",
+      user: "Taro",
+      message: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iure magni tempore, ad voluptas explicabo exercitationem!",
+    },
+    {
+      id: "2",
+      date: "2025-2-21 23:32",
+      user: "Jiro",
+      message: "Lorem ipsum dolor sit amet.",
+    },
+    {
+      id: "3",
+      date: "2025-2-21 23:33",
+      user: "Taro",
+      message: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, autem.",
+    },
+    {
+      key: "4",
+      date: "2025-2-21 23:36",
+      user: "Jiro",
+      message: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. In, ipsam.",
+    },
+    {
+      id: "5",
+      date: "2025-2-21 23:38",
+      user: "Saburo",
+      message: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatibus accusamus sed cum et sunt, omnis iste doloribus dolore modi. Neque!",
+    }
+  ];
+
   return (
     <div className="w-[1000px] min-w-[600px] mx-auto grid bg-white mt-5 p-5 rounded-xl">
 
@@ -9,45 +44,17 @@ export default function Home() {
       </p>
 
       {/* Message area */}
-      <div className="mt-5">
-        <div className="flex gap-2 text-xs">
-          <p>2025-2-21 23:30</p>
-          <p>@user</p>
-        </div>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. In, ipsam.</p>
-      </div>
-
-      <div className="mt-5">
-        <div className="flex gap-2 text-xs">
-          <p>2025-2-21 23:30</p>
-          <p>@user</p>
-        </div>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iure magni tempore, ad voluptas explicabo exercitationem!</p>
-      </div>
-
-      <div className="mt-5">
-        <div className="flex gap-2 text-xs">
-          <p>2025-2-21 23:30</p>
-          <p>@user</p>
-        </div>
-        <p>Lorem ipsum dolor sit amet.</p>
-      </div>
-
-      <div className="mt-5">
-        <div className="flex gap-2 text-xs">
-          <p>2025-2-21 23:30</p>
-          <p>@user</p>
-        </div>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, autem.</p>
-      </div>
-
-      <div className="mt-5">
-        <div className="flex gap-2 text-xs">
-          <p>2025-2-21 23:30</p>
-          <p>@user</p>
-        </div>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatibus accusamus sed cum et sunt, omnis iste doloribus dolore modi. Neque!</p>
-      </div>
+      {ITEMS.map((item) => {
+        return (
+          <div key={item.id} className="mt-5">
+            <div className="flex gap-2 text-xs">
+              <p>{item.date}</p>
+              <p>@{item.user}</p>
+            </div>
+            <p>{item.message}</p>
+          </div>
+        );
+      })}
 
       {/* Form area */}
       <hr className="mt-5"/>
