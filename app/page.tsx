@@ -1,3 +1,5 @@
+import { neon } from '@neondatabase/serverless';
+
 export default function Home() {
   const appName = process.env.APP_NAME;
 
@@ -35,6 +37,18 @@ export default function Home() {
     }
   ];
 
+  // データベースへの接続
+  async function create(formData: FormData) {
+    'use server';
+
+    // Connect to the Neon database
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    const user = formData.get('name');
+    const message = formData.get('message');
+    // Insert the comment from the form into the Postgres database
+    await sql('INSERT INTO messages ("user", message) VALUES ($1, $2)', [user, message]);
+  }
+
   return (
     <div className="w-[1000px] min-w-[600px] mx-auto grid bg-white mt-5 p-5 rounded-xl">
 
@@ -59,19 +73,19 @@ export default function Home() {
       {/* Form area */}
       <hr className="mt-5"/>
 
-      <form className="mt-5 flex items-center">
+      <form className="mt-5 flex items-center" action={create}>
         <div className="flex items-center">
           <label>Name</label>
-          <input type="text" className="bg-gray-200 ml-2 p-1 w-24" autoFocus />
+          <input type="text" name="name" className="bg-gray-200 ml-2 p-1 w-24" autoFocus required />
         </div>
         
         <div className="ml-5 flex-1 flex items-center">
           <label>Message</label>
-          <input type="text" className="bg-gray-200 ml-2 p-1 flex-1" />
+          <input type="text" name="message" className="bg-gray-200 ml-2 p-1 flex-1" required/>
         </div>
 
         <div>
-          <button type="button" className="ml-3 py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-200 text-gray-800 hover:bg-gray-200 focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none">
+          <button type="submit" className="ml-3 py-1 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-200 text-gray-800 hover:bg-gray-200 focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none">
             送信
           </button>
         </div>
