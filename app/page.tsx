@@ -1,41 +1,18 @@
 import { neon } from '@neondatabase/serverless';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
+export default async function Home() {
   const appName = process.env.APP_NAME;
 
-  // MessageData
-  const ITEMS = [
-    {
-      id: "1",
-      date: "2025-2-21 23:30",
-      user: "Taro",
-      message: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iure magni tempore, ad voluptas explicabo exercitationem!",
-    },
-    {
-      id: "2",
-      date: "2025-2-21 23:32",
-      user: "Jiro",
-      message: "Lorem ipsum dolor sit amet.",
-    },
-    {
-      id: "3",
-      date: "2025-2-21 23:33",
-      user: "Taro",
-      message: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, autem.",
-    },
-    {
-      key: "4",
-      date: "2025-2-21 23:36",
-      user: "Jiro",
-      message: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. In, ipsam.",
-    },
-    {
-      id: "5",
-      date: "2025-2-21 23:38",
-      user: "Saburo",
-      message: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatibus accusamus sed cum et sunt, omnis iste doloribus dolore modi. Neque!",
-    }
-  ];
+  // データベースからメッセージを取得
+  async function getMessages() {
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    const rows = await sql('SELECT id, date, "user", message FROM messages');
+    return rows;
+  }
+
+  // データを取得
+  const ITEMS = await getMessages();
 
   // データベースへの接続
   async function create(formData: FormData) {
@@ -47,6 +24,8 @@ export default function Home() {
     const message = formData.get('message');
     // Insert the comment from the form into the Postgres database
     await sql('INSERT INTO messages ("user", message) VALUES ($1, $2)', [user, message]);
+
+    redirect('/');
   }
 
   return (
@@ -62,7 +41,7 @@ export default function Home() {
         return (
           <div key={item.id} className="mt-5">
             <div className="flex gap-2 text-xs">
-              <p>{item.date}</p>
+              <p>{new Date(item.date).toLocaleString()}</p>
               <p>@{item.user}</p>
             </div>
             <p>{item.message}</p>
