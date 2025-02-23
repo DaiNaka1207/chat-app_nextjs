@@ -1,6 +1,8 @@
 import { neon } from '@neondatabase/serverless';
 import { redirect } from 'next/navigation';
 
+export const revalidate = 0; // キャッシュを無効化
+
 export default async function Home() {
   const appName = process.env.APP_NAME;
 
