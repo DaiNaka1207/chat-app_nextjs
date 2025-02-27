@@ -1,5 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 
 export const revalidate = 0; // キャッシュを無効化
 
@@ -12,6 +13,11 @@ export default async function Home() {
     const rows = await sql('SELECT id, date, "user", message FROM messages');
     return rows;
   }
+
+  // Cookieを読み込み
+  const cookieStore = await cookies();
+  const nameCookie = cookieStore.get('user_name');
+  const name = nameCookie ? nameCookie.value : 'Guest';
 
   // データを取得
   const ITEMS = await getMessages();
@@ -27,6 +33,14 @@ export default async function Home() {
     // Insert the comment from the form into the Postgres database
     await sql('INSERT INTO messages ("user", message) VALUES ($1, $2)', [user, message]);
 
+    // 365日後の日付を取得
+    const expirationDate = new Date(Date.now() + 9 * 60 * 60 * 1000); // 日本時間を取得
+    expirationDate.setDate(expirationDate.getDate() + 365);
+
+    // Cookieを設定
+    const cookieStore = await cookies();
+    cookieStore.set('user_name', user as string, { expires: expirationDate });
+    
     redirect('/');
   }
 
@@ -57,12 +71,12 @@ export default async function Home() {
       <form className="mt-5 flex items-center" action={create}>
         <div className="flex items-center">
           <label>Name</label>
-          <input type="text" name="name" className="bg-gray-200 ml-2 p-1 w-24" autoFocus required />
+          <input type="text" name="name" className="bg-gray-200 ml-2 p-1 w-24" defaultValue={name} required />
         </div>
         
         <div className="ml-5 flex-1 flex items-center">
           <label>Message</label>
-          <input type="text" name="message" className="bg-gray-200 ml-2 p-1 flex-1" required/>
+          <input type="text" name="message" className="bg-gray-200 ml-2 p-1 flex-1" autoFocus required/>
         </div>
 
         <div>
