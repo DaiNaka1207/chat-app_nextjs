@@ -1,7 +1,5 @@
-import { neon } from '@neondatabase/serverless';
-import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { getMessages } from '@/api/database-store';
+import { getMessages, create } from '@/api/database-store';
 
 export const revalidate = 0; // キャッシュを無効化
 
@@ -15,28 +13,6 @@ export default async function Home() {
 
   // データを取得
   const ITEMS = await getMessages('SELECT * FROM messages');
-
-  // データベースへの接続
-  async function create(formData: FormData) {
-    'use server';
-
-    // Connect to the Neon database
-    const sql = neon(`${process.env.DATABASE_URL}`);
-    const user = formData.get('name');
-    const message = formData.get('message');
-    // Insert the comment from the form into the Postgres database
-    await sql('INSERT INTO messages ("user", message) VALUES ($1, $2)', [user, message]);
-
-    // 365日後の日付を取得
-    const expirationDate = new Date(Date.now() + 9 * 60 * 60 * 1000); // 日本時間を取得
-    expirationDate.setDate(expirationDate.getDate() + 365);
-
-    // Cookieを設定
-    const cookieStore = await cookies();
-    cookieStore.set('user_name', user as string, { expires: expirationDate });
-    
-    redirect('/');
-  }
 
   return (
     <div className="w-[1000px] min-w-[600px] mx-auto grid bg-white mt-5 p-5 rounded-xl">
