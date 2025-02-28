@@ -1,18 +1,12 @@
 import { neon } from '@neondatabase/serverless';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { getMessages } from '@/api/database-store';
 
 export const revalidate = 0; // キャッシュを無効化
 
 export default async function Home() {
   const appName = process.env.APP_NAME;
-
-  // データベースからメッセージを取得
-  async function getMessages() {
-    const sql = neon(`${process.env.DATABASE_URL}`);
-    const rows = await sql('SELECT id, date, "user", message FROM messages');
-    return rows;
-  }
 
   // Cookieを読み込み
   const cookieStore = await cookies();
@@ -20,7 +14,7 @@ export default async function Home() {
   const name = nameCookie ? nameCookie.value : 'Guest';
 
   // データを取得
-  const ITEMS = await getMessages();
+  const ITEMS = await getMessages('SELECT * FROM messages');
 
   // データベースへの接続
   async function create(formData: FormData) {
