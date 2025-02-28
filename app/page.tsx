@@ -6,7 +6,7 @@ import { getMessages } from '@/api/database-store';
 export const revalidate = 0; // キャッシュを無効化
 
 export default async function Home() {
-  const appName = process.env.APP_NAME;
+  const appName = process.env.APP_NAME || 'Chat-app';
 
   // Cookieを読み込み
   const cookieStore = await cookies();
