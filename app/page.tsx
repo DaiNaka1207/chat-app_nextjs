@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
-import { getMessages, create } from '@/api/database-store';
+import { create } from '@/api/database-store';
+import MessageArea from '@/app/ui/message-area';
 
 export const revalidate = 0; // キャッシュを無効化
 
@@ -11,29 +12,16 @@ export default async function Home() {
   const nameCookie = cookieStore.get('user_name');
   const name = nameCookie ? nameCookie.value : 'Guest';
 
-  // データを取得
-  const ITEMS = await getMessages('SELECT * FROM messages');
-
   return (
     <div className="w-[1000px] min-w-[600px] mx-auto grid bg-white mt-5 p-5 rounded-xl">
 
       {/* Title */}
-      <p className="text-2xl font-bold">
+      <h1 className="text-2xl font-bold">
         {appName}
-      </p>
+      </h1>
 
       {/* Message area */}
-      {ITEMS.map((item) => {
-        return (
-          <div key={item.id} className="mt-5">
-            <div className="flex gap-2 text-xs">
-              <p>{new Date(item.date).toLocaleString()}</p>
-              <p>@{item.user}</p>
-            </div>
-            <p>{item.message}</p>
-          </div>
-        );
-      })}
+      <MessageArea />
 
       {/* Form area */}
       <hr className="mt-5"/>
