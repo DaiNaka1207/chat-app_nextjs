@@ -1,11 +1,11 @@
 import { cookies } from 'next/headers';
 import { create } from '@/api/database-store';
 import MessageArea from '@/app/ui/message-area';
+import TitleArea from '@/app/ui/title-area';
 
 export const revalidate = 0; // キャッシュを無効化
 
 export default async function Home() {
-  const appName = process.env.APP_NAME || 'Chat-app';
 
   // Cookieを読み込み
   const cookieStore = await cookies();
@@ -16,9 +16,7 @@ export default async function Home() {
     <div className="w-[1000px] min-w-[600px] mx-auto grid bg-white mt-5 p-5 rounded-xl">
 
       {/* Title */}
-      <h1 className="text-2xl font-bold">
-        {appName}
-      </h1>
+      <TitleArea />
 
       {/* Message area */}
       <MessageArea />
