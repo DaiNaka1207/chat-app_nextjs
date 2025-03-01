@@ -2,7 +2,7 @@ import { getMessages } from "@/api/database-store";
 
 export default async function messageArea() {
   // データを取得
-  const ITEMS = await getMessages('SELECT * FROM messages');
+  const ITEMS = await getMessages('SELECT * FROM messages LIMIT 10');
 
   return (
     <div>
