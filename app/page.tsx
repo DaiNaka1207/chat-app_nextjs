@@ -6,10 +6,12 @@ export const revalidate = 0; // キャッシュを無効化
 
 export default async function Home() {
   return (
-    <div className="w-[1000px] min-w-[600px] mx-auto grid bg-white mt-5 p-5 rounded-xl">
-      <TitleArea />
-      <MessageArea />
-      <FormArea />
+    <div className="flex justify-center">
+      <div className="w-full sm:w-6/12 min-w-max flex flex-col m-5 p-5 bg-white rounded-xl">
+        <TitleArea />
+        <MessageArea />
+        <FormArea />
+      </div>
     </div>
   );
 }
